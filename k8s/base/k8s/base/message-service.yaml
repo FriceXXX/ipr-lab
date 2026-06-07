@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-service
+  template:
+    metadata:
+      labels:
+        app: message-service
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: workload
+                operator: In
+                values:
+                - app
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: disk
+                operator: In
+                values:
+                - fast
+      containers:
+      - name: message-service
+        image: mablinov2704/message-service:latest
+        ports:
+        - containerPort: 8082
+        env:
+        - name: HTTP_PORT
+          value: "8082"
+        - name: DB_DSN
+          value: "postgres://messenger:secret@postgres:5432/messages_db?sslmode=disable"
+        - name: UPLOADS_DIR
+          value: "/uploads"
+        volumeMounts:
+        - name: uploads
+          mountPath: /uploads
+      volumes:
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: s3-uploads
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-service
+spec:
+  selector:
+    app: message-service
+  ports:
+  - port: 8082
+    targetPort: 8082

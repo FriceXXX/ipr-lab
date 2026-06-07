@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate-users
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: migrate
+        image: ghcr.io/kukymbr/goose-docker:latest
+        env:
+        - name: GOOSE_DRIVER
+          value: postgres
+        - name: GOOSE_DBSTRING
+          value: "postgres://messenger:secret@postgres:5432/users_db?sslmode=disable"
+        - name: GOOSE_MIGRATION_DIR
+          value: /migrations

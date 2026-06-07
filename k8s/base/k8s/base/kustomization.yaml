@@ -4,3 +4,13 @@ namespace: messenger
 resources:
 - namespace.yaml
 - secrets.yaml
+- configmap.yaml
+- postgres.yaml
+- minio.yaml
+- s3-csi.yaml
+- migrate-users.yaml
+- migrate-messages.yaml
+- frontend.yaml
+- bff.yaml
+- user-service.yaml
+- message-service.yaml

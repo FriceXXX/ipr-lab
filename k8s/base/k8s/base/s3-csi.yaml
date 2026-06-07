@@ -1,0 +1,32 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: s3-csi
+provisioner: ru.yandex.s3.csi
+parameters:
+  capacity: "10Gi"
+  mounter: geesefs
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: csi-s3-secret
+type: Opaque
+stringData:
+  accessKeyID: minioadmin
+  secretAccessKey: minioadmin
+  endpoint: http://minio:9000
+  region: us-east-1
+  bucket: uploads
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: s3-uploads
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: s3-csi

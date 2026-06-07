@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: frontend
+        image: mablinov2704/frontend:v1.0.0 
+        resources:
+          requests: { cpu: "200m", memory: "256Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: bff
+        image: mablinov2704/bff:v1.0.0
+        resources:
+          requests: { cpu: "200m", memory: "256Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-service
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: message-service
+        image: mablinov2704/message-service:v1.0.0
+        resources:
+          requests: { cpu: "200m", memory: "256Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: user-service
+        image: mablinov2704/user-service:v1.0.0
+        resources:
+          requests: { cpu: "200m", memory: "256Mi" }
+          limits: { cpu: "500m", memory: "512Mi" }
