@@ -21,4 +21,4 @@ spec:
       namespace: messager
     volumeAttributes:
       bucketName: uploads
-      mounter: geesefs
+      mounter: mounter
