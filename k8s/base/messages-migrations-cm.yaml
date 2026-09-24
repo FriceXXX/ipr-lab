@@ -4,6 +4,7 @@ metadata:
   name: messages-migrations-cm
 data:
   001_init.sql: |
+    -- +goose Up
     CREATE TABLE IF NOT EXISTS messages (
       id SERIAL PRIMARY KEY,
       sender_id INTEGER NOT NULL,
@@ -18,3 +19,7 @@ data:
       file_path VARCHAR(500) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- +goose Down
+    DROP TABLE IF EXISTS attachments;
+    DROP TABLE IF EXISTS messages;
