@@ -96,6 +96,13 @@ spec:
     nodePublishSecretRef:
       namespace: messager-prod
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: csi-s3-secret
+stringData:
+  endpoint: "http://minio.messager-prod.svc.cluster.local:9000"
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
