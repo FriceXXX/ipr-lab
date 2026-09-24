@@ -70,6 +70,8 @@ spec:
             limits:
               cpu: "300m"
               memory: "384Mi"
+          securityContext:
+            privileged: true 
       volumes:
         - name: uploads
           persistentVolumeClaim:
