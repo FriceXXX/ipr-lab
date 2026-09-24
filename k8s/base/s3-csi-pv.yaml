@@ -14,11 +14,11 @@ spec:
     - url=http://minio:9000
     - use_path_request_style
   csi:
-    driver: ch.ctrox.csi.s3-driver
+    driver: ru.yandex.s3.csi
     volumeHandle: s3-messager-uploads
     nodePublishSecretRef:
       name: csi-s3-secret
       namespace: messager
     volumeAttributes:
       bucketName: uploads
-      mounter: mounter
+      mounter: geesefs
