@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: message-service
+  namespace: messager
 spec:
   replicas: 1
   selector:
@@ -12,80 +13,47 @@ spec:
       labels:
         app: message-service
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: workload
-                    operator: In
-                    values:
-                      - app
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
-                  - key: disk
-                    operator: In
-                    values:
-                      - fast
       containers:
-        - name: message-service
-          image: mablinov2704/message-service:latest
-          securityContext:
-            privileged: true 
-            allowPrivilegeEscalation: true
-          ports:
-            - containerPort: 8082
-          env:
-            - name: HTTP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: messager-config
-                  key: MSG_HTTP_PORT
-            - name: DB_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: messager-db-secret
-                  key: MSG_DB_DSN
-            - name: UPLOADS_DIR
-              valueFrom:
-                configMapKeyRef:
-                  name: messager-config
-                  key: MSG_UPLOADS_DIR
-          volumeMounts:
-            - name: uploads
-              mountPath: /app/uploads
-          readinessProbe:
-            tcpSocket:
-              port: 8082
-            initialDelaySeconds: 10
-            periodSeconds: 5
-          livenessProbe:
-            tcpSocket:
-              port: 8082
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          resources:
-            requests:
-              cpu: "150m"
-              memory: "192Mi"
-            limits:
-              cpu: "300m"
-              memory: "384Mi"
+      - env:
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: MSG_HTTP_PORT
+              name: messager-config
+        - name: DB_DSN
+          valueFrom:
+            secretKeyRef:
+              key: MSG_DB_DSN
+              name: messager-db-secret
+        - name: UPLOADS_DIR
+          valueFrom:
+            configMapKeyRef:
+              key: MSG_UPLOADS_DIR
+              name: messager-config
+        image: mablinov2704/message-service:latest
+        name: message-service
+        ports:
+        - containerPort: 8082
+        resources:
+          requests:
+            cpu: 150m
+            memory: 192Mi
+        volumeMounts:
+        - mountPath: /app/uploads
+          name: uploads
       volumes:
-        - name: uploads
-          persistentVolumeClaim:
-            claimName: message-uploads-pvc
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: message-uploads-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: message-service
+  namespace: messager
 spec:
   selector:
     app: message-service
   ports:
-    - name: http
-      port: 8082
+    - port: 8082
       targetPort: 8082

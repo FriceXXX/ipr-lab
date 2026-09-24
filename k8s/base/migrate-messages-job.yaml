@@ -2,19 +2,23 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migrate-messages
+  namespace: messager
 spec:
   backoffLimit: 3
   template:
     spec:
       restartPolicy: Never
       containers:
-        - name: migrate-messages
+        - name: migrate
           image: ghcr.io/kukymbr/goose-docker:latest
           env:
             - name: GOOSE_DRIVER
               value: postgres
             - name: GOOSE_DBSTRING
-              value: "host=postgres user=messenger password=secret123 dbname=messager_messages sslmode=disable"
+              valueFrom:
+                secretKeyRef:
+                  name: messager-db-secret
+                  key: MSG_DB_DSN
             - name: GOOSE_MIGRATION_DIR
               value: /migrations
           volumeMounts:

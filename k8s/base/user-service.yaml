@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-service
+  namespace: messager
 spec:
   replicas: 1
   selector:
@@ -16,53 +17,40 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-              - matchExpressions:
-                  - key: workload
-                    operator: In
-                    values:
-                      - app
+            - matchExpressions:
+              - key: workload
+                operator: In
+                values:
+                - app
       containers:
-        - name: user-service
-          image: mablinov2704/user-service:latest
-          ports:
-            - containerPort: 8081
-          env:
-            - name: HTTP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: messager-config
-                  key: USER_HTTP_PORT
-            - name: DB_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: messager-db-secret
-                  key: USER_DB_DSN
-          readinessProbe:
-            tcpSocket:
-              port: 8081
-            initialDelaySeconds: 10
-            periodSeconds: 5
-          livenessProbe:
-            tcpSocket:
-              port: 8081
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          resources:
-            requests:
-              cpu: "150m"
-              memory: "192Mi"
-            limits:
-              cpu: "300m"
-              memory: "384Mi"
+      - env:
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: USER_HTTP_PORT
+              name: messager-config
+        - name: DB_DSN
+          valueFrom:
+            secretKeyRef:
+              key: USER_DB_DSN
+              name: messager-db-secret
+        image: mablinov2704/user-service:latest
+        name: user-service
+        ports:
+        - containerPort: 8081
+        resources:
+          requests:
+            cpu: 150m
+            memory: 192Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: user-service
+  namespace: messager
 spec:
   selector:
     app: user-service
   ports:
-    - name: http
-      port: 8081
+    - port: 8081
       targetPort: 8081

@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/FriceXXX/ipr-lab
+    repoURL: https://github.com/FriceXXX/ipr-lab1
     targetRevision: main
     path: k8s/overlays/dev
   destination:
