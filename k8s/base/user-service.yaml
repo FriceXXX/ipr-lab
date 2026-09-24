@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-service
-  namespace: messager
 spec:
   replicas: 1
   selector:
@@ -38,16 +37,28 @@ spec:
         name: user-service
         ports:
         - containerPort: 8081
+        readinessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
         resources:
           requests:
             cpu: 150m
             memory: 192Mi
+          limits:
+            cpu: 300m
+            memory: 384Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: user-service
-  namespace: messager
 spec:
   selector:
     app: user-service

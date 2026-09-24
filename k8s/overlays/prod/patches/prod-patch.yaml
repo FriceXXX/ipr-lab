@@ -87,6 +87,15 @@ spec:
               cpu: "1000m"
               memory: "2Gi"
 ---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: s3-pv-messager-uploads
+spec:
+  csi:
+    nodePublishSecretRef:
+      namespace: messager-prod
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
