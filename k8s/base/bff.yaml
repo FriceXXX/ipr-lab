@@ -43,14 +43,12 @@ spec:
                   name: messager-config
                   key: MSG_SERVICE_URL
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10

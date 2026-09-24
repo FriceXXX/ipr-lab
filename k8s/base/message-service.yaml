@@ -54,14 +54,12 @@ spec:
             - name: uploads
               mountPath: /app/uploads
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 8082
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 8082
             initialDelaySeconds: 30
             periodSeconds: 10
