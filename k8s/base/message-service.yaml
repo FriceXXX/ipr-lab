@@ -32,6 +32,9 @@ spec:
       containers:
         - name: message-service
           image: mablinov2704/message-service:latest
+          securityContext:
+            privileged: true 
+            allowPrivilegeEscalation: true
           ports:
             - containerPort: 8082
           env:
@@ -70,8 +73,6 @@ spec:
             limits:
               cpu: "300m"
               memory: "384Mi"
-          securityContext:
-            privileged: true 
       volumes:
         - name: uploads
           persistentVolumeClaim:
