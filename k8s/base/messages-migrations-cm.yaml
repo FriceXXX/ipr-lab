@@ -6,20 +6,33 @@ data:
   001_init.sql: |
     -- +goose Up
     CREATE TABLE IF NOT EXISTS messages (
-      id SERIAL PRIMARY KEY,
-      sender_id INTEGER NOT NULL,
-      receiver_id INTEGER NOT NULL,
-      content TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        id          TEXT PRIMARY KEY,
+        sender_id   TEXT NOT NULL,
+        receiver_id TEXT NOT NULL,
+        text        TEXT NOT NULL DEFAULT '',
+        file_id     TEXT,
+        edited      BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
-    
-    CREATE TABLE IF NOT EXISTS attachments (
-      id SERIAL PRIMARY KEY,
-      message_id INTEGER REFERENCES messages(id),
-      file_path VARCHAR(500) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+    CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages (sender_id, receiver_id);
+    CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages (created_at);
+
+    CREATE TABLE IF NOT EXISTS files (
+        id           TEXT PRIMARY KEY,
+        orig_name    TEXT NOT NULL,
+        content_type TEXT NOT NULL,
+        path         TEXT NOT NULL,
+        created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
 
     -- +goose Down
-    DROP TABLE IF EXISTS attachments;
     DROP TABLE IF EXISTS messages;
+    DROP TABLE IF EXISTS files;
+  002_add_file_name.sql: |
+    -- +goose Up
+    ALTER TABLE messages ADD COLUMN IF NOT EXISTS file_name TEXT NOT NULL DEFAULT '';
+
+    -- +goose Down
+    ALTER TABLE messages DROP COLUMN IF EXISTS file_name;
