@@ -12,7 +12,6 @@ spec:
       labels:
         app: message-service
     spec:
-      nodeName: lab-cluster
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
