@@ -21,6 +21,8 @@ spec:
                     operator: In
                     values:
                       - system
+      imagePullSecrets:
+        - name: quay-pull-secret
       containers:
         - name: minio
           image: quay.io/minio/minio:latest
