@@ -14,7 +14,7 @@ spec:
     - url=http://minio:9000
     - use_path_request_style
   csi:
-    driver: ru.yandex.s3.csi
+    driver: ch.ctrox.csi.s3-driver
     volumeHandle: s3-messager-uploads
     nodePublishSecretRef:
       name: csi-s3-secret
