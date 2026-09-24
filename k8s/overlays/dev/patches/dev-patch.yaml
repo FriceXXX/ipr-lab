@@ -78,6 +78,8 @@ spec:
   csi:
     nodePublishSecretRef:
       namespace: messager-dev
+    nodeStageSecretRef:
+      namespace: messager-dev
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

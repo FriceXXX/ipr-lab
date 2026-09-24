@@ -95,6 +95,8 @@ spec:
   csi:
     nodePublishSecretRef:
       namespace: messager-prod
+    nodeStageSecretRef:
+      namespace: messager-prod
 ---
 apiVersion: v1
 kind: Secret
