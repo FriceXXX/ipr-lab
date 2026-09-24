@@ -24,4 +24,4 @@ spec:
       namespace: messager
     volumeAttributes:
       bucketName: uploads
-      mounter: rclone
+      mounter: s3fs
