@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: frontend
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: bff
+          resources:
+            requests:
+              cpu: "75m"
+              memory: "96Mi"
+            limits:
+              cpu: "150m"
+              memory: "192Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: user-service
+          resources:
+            requests:
+              cpu: "75m"
+              memory: "96Mi"
+            limits:
+              cpu: "150m"
+              memory: "192Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-service
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: message-service
+          resources:
+            requests:
+              cpu: "75m"
+              memory: "96Mi"
+            limits:
+              cpu: "150m"
+              memory: "192Mi"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: messager-ingress
+spec:
+  rules:
+    - host: dev.messager.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

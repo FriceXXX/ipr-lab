@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: messenger-dev
+  name: messager-dev
   namespace: argocd
 spec:
   project: default
@@ -11,10 +11,10 @@ spec:
     path: k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: messenger-dev
+    namespace: messager-dev
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
