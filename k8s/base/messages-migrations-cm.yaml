@@ -30,6 +30,7 @@ data:
     -- +goose Down
     DROP TABLE IF EXISTS messages;
     DROP TABLE IF EXISTS files;
+    
   002_add_file_name.sql: |
     -- +goose Up
     ALTER TABLE messages ADD COLUMN IF NOT EXISTS file_name TEXT NOT NULL DEFAULT '';
